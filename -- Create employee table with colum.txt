@@ -1,0 +1,71 @@
+-- Create employee table with columns for each training module
+CREATE TABLE employee (
+    emp_id INT PRIMARY KEY,
+    content_compliance_awareness_module VARCHAR(20),
+    global_procurement_policy VARCHAR(20),
+    cyber_security_data_privacy_awareness_module VARCHAR(20),
+    cyber_security_data_privacy_awareness_module_isg_executives VARCHAR(20)
+);
+
+-- Create employee_training_status table to store each training status for each employee
+CREATE TABLE employee_training_status (
+    emp_id INT,
+    training_title VARCHAR(100),
+    transcript_status VARCHAR(50),
+    PRIMARY KEY (emp_id, training_title)
+);
+
+-- Insert data into employee table
+INSERT INTO employee (emp_id, content_compliance_awareness_module, global_procurement_policy, cyber_security_data_privacy_awareness_module, cyber_security_data_privacy_awareness_module_isg_executives) VALUES
+(1224, 'Not Started', 'NA', 'NA', 'Not Started'),
+(1867, 'Completed', 'NA', 'NA', 'Completed'),
+(21248, 'Not Started', 'NA', 'NA', 'Not Started'),
+(38666, 'Not Started', 'NA', 'NA', 'In Progress'),
+(221783, 'In Progress', 'NA', 'NA', 'Not Started'),
+(135301, 'Completed', 'NA', 'NA', 'Completed');
+
+-- Insert data into employee_training_status table
+INSERT INTO employee_training_status (emp_id, training_title, transcript_status) VALUES
+(34406, 'EXL Security Trading Policy 2023', 'Registered / Past Due'),
+(2, 'EXL Security Trading Refresher Policy 2023', 'Completed'),
+(23255, 'Environment Health and Safety E-learning module', 'Completed'),
+(773, 'EXL Security Trading Refresher Policy 2023', 'Completed'),
+(2, 'Environment Health and Safety E-learning module', 'Completed'),
+(2, 'Sexual Harassment prevention for Employees India 2023', 'Completed'),
+(2, 'Cyber security, data privacy and business continuity awareness module-isg executives', 'Completed');
+
+-- Update employee table for content_compliance_awareness_module
+UPDATE employee e
+LEFT JOIN (
+    SELECT emp_id, transcript_status
+    FROM employee_training_status
+    WHERE training_title = 'Content Compliance Awareness Module'
+) ets ON e.emp_id = ets.emp_id
+SET e.content_compliance_awareness_module = COALESCE(ets.transcript_status, 'Not Started');
+
+-- Update employee table for global_procurement_policy
+UPDATE employee e
+LEFT JOIN (
+    SELECT emp_id, transcript_status
+    FROM employee_training_status
+    WHERE training_title = 'Global Procurement Policy'
+) ets ON e.emp_id = ets.emp_id
+SET e.global_procurement_policy = COALESCE(ets.transcript_status, 'Not Started');
+
+-- Update employee table for cyber_security_data_privacy_awareness_module
+UPDATE employee e
+LEFT JOIN (
+    SELECT emp_id, transcript_status
+    FROM employee_training_status
+    WHERE training_title = 'Cyber security, data privacy and business continuity awareness module'
+) ets ON e.emp_id = ets.emp_id
+SET e.cyber_security_data_privacy_awareness_module = COALESCE(ets.transcript_status, 'Not Started');
+
+-- Update employee table for cyber_security_data_privacy_awareness_module_isg_executives
+UPDATE employee e
+LEFT JOIN (
+    SELECT emp_id, transcript_status
+    FROM employee_training_status
+    WHERE training_title = 'Cyber security, data privacy and business continuity awareness module-isg executives'
+) ets ON e.emp_id = ets.emp_id
+SET e.cyber_security_data_privacy_awareness_module_isg_executives = COALESCE(ets.transcript_status, 'Not Started');
